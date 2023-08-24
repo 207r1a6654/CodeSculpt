@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Coding Playground</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- Need prism CSS for highlight code -->
+  <link rel="stylesheet" href="./prism/css/prism-tomorrow.css">
+  <link rel="stylesheet" href="./prism/css/prism-live.css">
+</head>
+<body>
+  <div id="coding_playground_outer">
+    <div id="logoutDiv">
+      <div id="project-title">
+        <input type="text" id="projectTitle" placeholder="Project Title" value="<%=projectTitle%>">
+      </div>
+      <button id="shareLinkButton" style="display: none;"><i class='bx bx-link-alt'></i> Shareable Link</button>
+      <button id="run"><i class='bx bx-play'></i>RUN</button>
+      <button id="save"><i class='bx bx-save'></i>Save</button>
+      <a id="userProfile"><i class='bx bxs-face'></i><%= username %>!</a>
+      <div class="dropdown-content" id="profileDropdown">
+        <a href="/my-works">My Works</a>
+        <a id="logout" href="/logout"><i class='bx bx-log-out-circle'></i>Logout</a>
+      </div>
+    </div>
+    <div class="page-wrap twilight">
+      <div class="boxes">
+        <div id="coding_area" class="coding-area">
+          <div class="code-editor" id="htmlEditor">
+            <textarea id="html1" placeholder="HTML" class="prism-live language-html"><%= savedHtml %></textarea>
+          </div>
+          <div class="code-editor" id="cssEditor">
+            <textarea id="css1" placeholder="CSS" class="prism-live language-css"><%= savedCss %></textarea>
+          </div>
+          <div class="code-editor" id="jsEditor">
+            <textarea id="js1" placeholder="JavaScript" class="prism-live language-js"><%= savedJs %></textarea>
+          </div>
+        </div>  
+        <div class="toggle-buttons">
+          <button id="toggleHtmlButton">Toggle HTML</button>
+          <button id="toggleCssButton">Toggle CSS</button>
+          <button id="toggleJsButton">Toggle JavaScript</button>
+        </div>
+        <div id="code_output" style="position: relative;">
+          <div class="iframe-controls">
+            <a href="/project/<%= project_id %>" class="external-link"><i class='bx bx-link-external'></i></a>
+            <a href="#" class="expand-link"><i class='bx bx-expand'></i></a>
+            <a href="#" class="shrink-link" style="display: none;"><i class='bx bx-x'></i></a>
+          </div>
+          <iframe id="code"></iframe>
+        </div>   
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./assets/app.js"></script>
+  <script type="text/javascript" src="./prism/js/prism.js"></script>
+  <script type="text/javascript" src="./prism/js/prism-live.js"></script>
+  <script>
+    const externalLink = document.querySelector('.external-link');
+
+    externalLink.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const codeIframe = document.getElementById('code');
+      const codeDocument = codeIframe.contentDocument || codeIframe.contentWindow.document;
+
+      // new window/tab for iframe
+      const newWindow = window.open();
+      newWindow.document.write(codeDocument.documentElement.innerHTML);
+    });
+  </script>
+  <script>
+    const codeIframe = document.getElementById('code');
+    const logoutDiv = document.getElementById('logoutDiv');
+    const expandLink = document.querySelector('.expand-link');
+    const shrinkLink = document.querySelector('.shrink-link');
+    const codingArea = document.getElementById('coding_area');
+    const textAreas = codingArea.querySelectorAll('textarea');
+  
+    expandLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      codingArea.style.display = 'none';
+      codeIframe.style.width = '100%';
+      codeIframe.style.height = '100vh';
+      logoutDiv.style.display = 'none';
+      expandLink.style.display = 'none';
+      shrinkLink.style.display = 'block';
+    });
+  
+    shrinkLink.addEventListener('click', function (event) {
+      event.preventDefault();
+      codingArea.style.display = 'flex';
+      codeIframe.style.width = '100%';
+      codeIframe.style.height = '50vh';
+      logoutDiv.style.display = 'flex';
+      expandLink.style.display = 'block';
+      shrinkLink.style.display = 'none';
+    });
+  </script>
+  <script>
+    const userProfile = document.getElementById('userProfile');
+    const profileDropdown = document.getElementById('profileDropdown');
+  
+    userProfile.addEventListener('click', function () {
+      profileDropdown.classList.toggle('show');
+    });
+  
+    // Close the dropdown if the user clicks outside of it
+    window.addEventListener('click', function (event) {
+      if (!event.target.matches('#userProfile')) {
+        const dropdowns = document.getElementsByClassName('dropdown-content');
+        for (const dropdown of dropdowns) {
+          if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+          }
+        }
+      }
+    });
+  </script>
+  <script>
+    const toggleHtmlButton = document.getElementById('toggleHtmlButton');
+     const toggleCssButton = document.getElementById('toggleCssButton');
+     const toggleJsButton = document.getElementById('toggleJsButton');
+     const htmlEditor = document.getElementById('htmlEditor');
+     const cssEditor = document.getElementById('cssEditor');
+     const jsEditor = document.getElementById('jsEditor');
+ 
+     toggleHtmlButton.addEventListener('click', () => {
+       toggleCodeEditorVisibility(htmlEditor);
+     });
+ 
+     toggleCssButton.addEventListener('click', () => {
+       toggleCodeEditorVisibility(cssEditor);
+     });
+ 
+     toggleJsButton.addEventListener('click', () => {
+       toggleCodeEditorVisibility(jsEditor);
+     });
+ 
+     function toggleCodeEditorVisibility(editor) {
+       editor.classList.toggle('hidden');
+       updateCodingAreaVisibility();
+     }
+ 
+     function updateCodingAreaVisibility() {
+       const hiddenEditors = [htmlEditor, cssEditor, jsEditor].filter(editor => editor.classList.contains('hidden'));
+       if (hiddenEditors.length === 3 ) {
+         codingArea.style.display = 'none';
+       } else {
+         codingArea.style.display = 'flex';
+       }
+     }
+   </script> 
+</body>
+</html>

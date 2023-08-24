@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Works</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .projects-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .project {
+      width: calc(33.33% - 20px);
+      margin: 10px;
+      padding: 15px;
+      background-color: #333;
+      border-radius: 5px;
+    }
+
+    .project a {
+      display: block;
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      transition: 1s ease;
+    }
+
+    .project a:hover {
+      color: #d33e3e;
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Works</h1> 
+    <a id="logout" href="/logout"><i class='bx bx-log-out-circle'></i>Logout</a>
+  </header>
+  <div class="projects-container">
+    <% projectTitles.forEach(projectTitle => { %>
+      <div class="project">
+        <a href="/dashboard?project=<%= encodeURIComponent(projectTitle) %>"><%= projectTitle %></a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

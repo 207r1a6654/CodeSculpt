@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff; 
+      color: #000000; 
+      padding: 20px;
+    }
+
+    .code-block {
+      background-color: #282c34;
+      color: #ffffff; 
+    }
+
+    body.dark-theme {
+      background-color: #1f1f1f; 
+      color: #ffffff; 
+    }
+
+    .code-block.dark-theme {
+      background-color: #ffffff;
+      color: #282c34;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .code-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .code-block {
+      flex: 1;
+      padding: 20px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+
+    code {
+      font-family: "Courier New", monospace;
+    }
+
+    /* Toggle button */
+    #themeToggle {
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    button{
+      background-color: #282c34;
+      color: #f0f0f0;
+      padding: 7px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Code Viewer</h1>
+  <button id="themeToggle">Toggle Theme</button>
+  <div class="code-container">
+    <div class="code-block">
+      <h2>HTML</h2>
+      <pre><code><%= savedHtml %></code></pre>
+    </div>
+    <div class="code-block">
+      <h2>CSS</h2>
+      <pre><code><%= savedCss %></code></pre>
+    </div>
+    <div class="code-block">
+      <h2>JavaScript</h2>
+      <pre><code><%= savedJs %></code></pre>
+    </div>
+  </div>
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-theme");
+    });
+  </script>
+</body>
+</html>
